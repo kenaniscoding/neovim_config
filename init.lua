@@ -20,7 +20,7 @@ vim.keymap.set('n', '<leader>f', ':FZF<CR>', { silent = true })
 -- Leader + n to toggle the file explorer
 vim.keymap.set('n', '<leader>t', ':NERDTreeToggle<CR>', { silent = true })
 -- Leader + s to source your config from any file
-vim.keymap.set('n', '<leader>su', ' :source $MYVIMRC<CR>', { silent = true })
+vim.keymap.set('n', '<leader>su', ':source $MYVIMRC<CR>', { silent = true })
 -- Leader + i to PlugInstall 
 vim.keymap.set('n', '<leader>pi', ':PlugInstall<CR>', { silent = true })
 -- Leader + u to PlugUpdate 
