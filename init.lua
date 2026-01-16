@@ -27,7 +27,7 @@ vim.keymap.set('n', '<leader>pi', ':PlugInstall<CR>', { silent = true })
 vim.keymap.set('n', '<leader>pu', ':PlugUpdate<CR>', { silent = true })
 -- Leader + c to PlugClean 
 vim.keymap.set('n', '<leader>pc', ':PlugClean<CR>', { silent = true })
--- Tab and Shift+Tab to cycle through open files
+-- Shift + h and Shift + l to cycle through open files
 vim.keymap.set('n', '<S-l>', ':BufferLineCycleNext<CR>', { silent = true })
 vim.keymap.set('n', '<S-h>', ':BufferLineCyclePrev<CR>', { silent = true })
 -- Leader + x to close the current tab/buffer
