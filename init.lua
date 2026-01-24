@@ -16,7 +16,7 @@ end
 
 -- KEY SHORTCUT
 -- Leader + f to search files 
-vim.keymap.set('n', '<leader>f', ':FZF<CR>', { silent = true })
+-- vim.keymap.set('n', '<leader>f', ':FZF<CR>', { silent = true })
 -- Leader + e to toggle the file explorer
 vim.keymap.set('n', '<leader>e', ':NERDTreeToggle<CR>', { silent = true })
 -- Leader + s to source your config from any file
@@ -30,14 +30,14 @@ vim.keymap.set('n', '<leader>pc', ':PlugClean<CR>', { silent = true })
 -- Shift + h and Shift + h to cycle through open files
 vim.keymap.set('n', '<S-l>', ':BufferLineCycleNext<CR>', { silent = true })
 vim.keymap.set('n', '<S-h>', ':BufferLineCyclePrev<CR>', { silent = true })
--- Leader + x to close the current tab/buffer
+-- Leader + wx to close the current tab/buffer
 vim.keymap.set('n', '<leader>wx', ':bdelete<CR>', { silent = true })
 
 -- Split Management (using Leader + s for "split")
-vim.keymap.set('n', '<leader>sv', '<C-w>v', { desc = 'Split window vertically' })
-vim.keymap.set('n', '<leader>sh', '<C-w>s', { desc = 'Split window horizontally' })
-vim.keymap.set('n', '<leader>sx', '<C-w>q', { desc = 'Close current split' })
-vim.keymap.set('n', '<leader>so', '<C-w>o', { desc = 'Close all OTHER splits' })
+vim.keymap.set('n', '<leader>wv', '<C-w>v', { desc = 'Split window vertically' })
+vim.keymap.set('n', '<leader>wh', '<C-w>s', { desc = 'Split window horizontally' })
+vim.keymap.set('n', '<leader>wx', '<C-w>q', { desc = 'Close current split' })
+vim.keymap.set('n', '<leader>wo', '<C-w>o', { desc = 'Close all OTHER splits' })
 -- Leader + gg to open Lazygit (the main shortcut)
 vim.keymap.set("n", "<leader>gg", ":LazyGit<CR>", { desc = "LazyGit" })
 -- Leader + gf to open Lazygit for the current file only
@@ -101,6 +101,59 @@ require("bufferline").setup({
   }
 })
 
+-- 3. FZF-LUA CONFIGURATION
+local fzf = require('fzf-lua')
+
+fzf.setup({
+    -- Matches the SEARCH and GLOBAL STYLE flags from your manual
+    fzf_opts = {
+        ['--layout']     = 'reverse',     -- Search from top to bottom
+        ['--info']       = 'inline',      -- Modern info style
+        ['--border']     = 'rounded',     -- Rounded corners for the fzf window
+        ['--smart-case'] = '',            -- Case-insensitive search
+    },
+    winopts = {
+        height = 0.85,
+        width  = 0.80,
+        preview = {
+            layout = 'flex',              -- Switches between horizontal/vertical based on size
+            horizontal = 'right:50%',     -- Matches --preview-window=right:50%
+            vertical = 'down:45%',
+        },
+    },
+    -- Force 'ag' as the default grep engine
+    grep = {
+        cmd = "ag --vimgrep",
+        input_prompt = 'Ag> ',
+    }
+})
+
+-- 4. THE :Ag COMMAND DEFINITION
+-- Mimics classic :Ag [pattern] with your specific fzf flags
+vim.api.nvim_create_user_command('Ag', function(opts)
+    fzf.grep({ 
+        search = opts.args,
+        fzf_opts = {
+            ['--nth'] = '4..', -- Skip file path/line in search matching
+        }
+    })
+end, { nargs = '*' })
+
+-- 5. KEYBINDINGS
+local opts = { silent = true }
+
+-- File Navigation
+vim.keymap.set('n', '<leader>f', fzf.files, opts)
+vim.keymap.set('n', '<leader>b', fzf.buffers, opts)
+
+-- Search (Ag style)
+vim.keymap.set('n', '<leader>lg', ':Ag ', { silent = false }) -- Prompt for pattern
+vim.keymap.set('n', '<leader>aw', fzf.grep_cword, opts)        -- Ag word under cursor
+vim.keymap.set('n', '<leader>ag', fzf.live_grep, opts)        -- Modern Live Grep
+
+-- Help & History
+vim.keymap.set('n', '<leader>h', fzf.help_tags, opts)
+vim.keymap.set('n', '<leader>:', fzf.command_history, opts)
 -- Color schemes should be loaded after plug#end().
 -- We prepend it with 'silent!' to ignore errors when it's not yet installed.
 -- vim.cmd('silent! colorscheme seoul233')
