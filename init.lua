@@ -78,10 +78,8 @@ Plug('tpope/vim-fireplace', { ['for'] = 'clojure' })
 Plug('ibhagwan/fzf-lua', { ['branch'] = 'main' })
 -- For file icons
 Plug('nvim-tree/nvim-web-devicons')
-
 -- The bar at the top
 Plug('akinsho/bufferline.nvim', { ['tag'] = '*' })
-
 -- Unmanaged plugin (manually installed and updated)
 Plug('~/my-prototype-plugin')
 
@@ -101,10 +99,8 @@ require("bufferline").setup({
     separator_style = "slant", -- options: "slant", "thick", "thin"
   }
 })
-
--- 3. FZF-LUA CONFIGURATION
+-- FZF-LUA CONFIGURATION
 local fzf = require('fzf-lua')
-
 fzf.setup({
     -- Matches the SEARCH and GLOBAL STYLE flags from your manual
     fzf_opts = {
@@ -128,8 +124,7 @@ fzf.setup({
         input_prompt = 'Ag> ',
     }
 })
-
--- 4. THE :Ag COMMAND DEFINITION
+-- :Ag COMMAND DEFINITION
 -- Mimics classic :Ag [pattern] with your specific fzf flags
 vim.api.nvim_create_user_command('Ag', function(opts)
     fzf.grep({ 
@@ -139,22 +134,19 @@ vim.api.nvim_create_user_command('Ag', function(opts)
         }
     })
 end, { nargs = '*' })
-
--- 5. KEYBINDINGS
 local opts = { silent = true }
 
 -- File Navigation
 vim.keymap.set('n', '<leader>f', fzf.files, opts)
 vim.keymap.set('n', '<leader>b', fzf.buffers, opts)
-
 -- Search (Ag style)
 vim.keymap.set('n', '<leader>lg', ':Ag ', { silent = false }) -- Prompt for pattern
 -- vim.keymap.set('n', '<leader>aw', fzf.grep_cword, opts)        -- Ag word under cursor
 vim.keymap.set('n', '<leader>ag', fzf.live_grep, opts)        -- Modern Live Grep
-
 -- Help & History
 vim.keymap.set('n', '<leader>h', fzf.help_tags, opts)
 vim.keymap.set('n', '<leader>:', fzf.command_history, opts)
+
 -- Color schemes should be loaded after plug#end().
 -- We prepend it with 'silent!' to ignore errors when it's not yet installed.
 -- vim.cmd('silent! colorscheme seoul233')
